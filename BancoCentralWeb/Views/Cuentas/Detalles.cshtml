@@ -1,0 +1,142 @@
+@model BancoCentralWeb.Models.Cuentas.CuentaResponse
+
+@{
+    ViewData["Title"] = "Detalles de la Cuenta";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">
+                <i class="fas fa-university"></i> Detalles de la Cuenta
+            </h1>
+            <div>
+                <a href="@Url.Action("Index")" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Información de la Cuenta</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>ID de Cuenta:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            @Model.CuentaId
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Producto:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            @Model.Producto
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Moneda:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            @Model.Moneda
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Estado:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="badge bg-@(Model.Estado == "activa" ? "success" : Model.Estado == "bloqueada" ? "warning" : "danger")">
+                                @Model.Estado
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Saldo Actual:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="text-@(Model.Saldo >= 0 ? "success" : "danger")">@Model.Saldo.ToString("N2") @Model.Moneda</h4>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Fecha de Apertura:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            @Model.AbiertaEn.ToString("dd/MM/yyyy HH:mm")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Acciones</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <form asp-action="EmitirCertificadoSaldo" asp-controller="Certificados" method="post">
+                            <input type="hidden" name="cuentaId" value="@Model.CuentaId" />
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-certificate"></i> Emitir Certificado de Saldo
+                            </button>
+                        </form>
+                        <a href="@Url.Action("Index", "Transacciones")?cuentaId=@Model.CuentaId" class="btn btn-info">
+                            <i class="fas fa-list"></i> Ver Transacciones
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Información del Cliente</h6>
+                </div>
+                <div class="card-body">
+                    @if (Model.ClienteId.HasValue)
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p><strong>ID del Cliente:</strong> @Model.ClienteId</p>
+                                <div class="d-flex gap-2">
+                                    <a href="@Url.Action("Detalles", "Clientes", new { id = Model.ClienteId })" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-user"></i> Ver Detalles del Cliente
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> Esta cuenta no está asociada a ningún cliente.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle"></i> No se encontró la cuenta solicitada.
+    </div>
+}

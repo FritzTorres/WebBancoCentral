@@ -1,0 +1,146 @@
+@model BancoCentralWeb.Models.Clientes.ClienteListResponse
+
+@{
+    ViewData["Title"] = "Clientes";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">
+                <i class="fas fa-users"></i> Clientes
+            </h1>
+            <a href="@Url.Action("Crear")" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nuevo Cliente
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row align-items-center">
+            <div class="col">
+                <h6 class="m-0 font-weight-bold text-primary">Lista de Clientes</h6>
+            </div>
+            <div class="col-auto">
+                <form method="get" class="d-flex">
+                    <input type="text" name="q" value="@Context.Request.Query["q"]" class="form-control form-control-sm me-2" placeholder="Buscar...">
+                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="clientesTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Cédula/RNC</th>
+                        <th>Nombre Completo</th>
+                        <th>Tipo Cliente</th>
+                        <th>KYC Vigente Hasta</th>
+                        <th>Fecha Creación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model?.Clientes != null)
+                    {
+                        @foreach (var cliente in Model.Clientes)
+                        {
+                            <tr>
+                                <td>@cliente.CedulaRnc</td>
+                                <td>@cliente.NombreCompleto</td>
+                                <td>
+                                    <span class="badge bg-info">@cliente.TipoCliente</span>
+                                </td>
+                                <td>
+                                    @if (cliente.KycVigenteHasta.HasValue)
+                                    {
+                                        if (cliente.KycVigenteHasta.Value > DateTime.Now)
+                                        {
+                                            <span class="badge bg-success">@cliente.KycVigenteHasta.Value.ToString("dd/MM/yyyy")</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">@cliente.KycVigenteHasta.Value.ToString("dd/MM/yyyy")</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">No definido</span>
+                                    }
+                                </td>
+                                <td>@cliente.CreadoEn.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="@Url.Action("Detalles", new { id = cliente.ClienteId })" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">No hay clientes registrados</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (Model != null && Model.Total > Model.PageSize)
+        {
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div>
+                    Mostrando @Model.PageSize de @Model.Total registros
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        @if (Model.Page > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", new { page = Model.Page - 1, pageSize = Model.PageSize, q = Context.Request.Query["q"] })">Anterior</a>
+                            </li>
+                        }
+                        
+                        @for (int i = Math.Max(1, Model.Page - 2); i <= Math.Min((int)Math.Ceiling((double)Model.Total / Model.PageSize), Model.Page + 2); i++)
+                        {
+                            <li class="page-item @(i == Model.Page ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { page = i, pageSize = Model.PageSize, q = Context.Request.Query["q"] })">@i</a>
+                            </li>
+                        }
+                        
+                        @if (Model.Page < (int)Math.Ceiling((double)Model.Total / Model.PageSize))
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", new { page = Model.Page + 1, pageSize = Model.PageSize, q = Context.Request.Query["q"] })">Siguiente</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#clientesTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es.json'
+                },
+                pageLength: 10,
+                ordering: true,
+                searching: false
+            });
+        });
+    </script>
+}

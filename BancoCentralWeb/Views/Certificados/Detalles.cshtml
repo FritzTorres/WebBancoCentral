@@ -1,0 +1,168 @@
+@model BancoCentralWeb.Models.Certificados.CertificadoResponse
+
+@{
+    ViewData["Title"] = "Detalles del Certificado";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">
+                <i class="fas fa-certificate"></i> Detalles del Certificado
+            </h1>
+            <div>
+                <a href="@Url.Action("Index")" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Información del Certificado</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>ID de Certificado:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            @Model.CertificadoId
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Tipo:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="badge bg-@(Model.Tipo == "saldo" ? "primary" : "info")">
+                                @Model.Tipo
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Cliente ID:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            @if (Model.ClienteId.HasValue)
+                            {
+                                <a href="@Url.Action("Detalles", "Clientes", new { id = Model.ClienteId })" class="btn btn-sm btn-outline-primary">
+                                    @Model.ClienteId
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No especificado</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Cuenta ID:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            @if (Model.CuentaId.HasValue)
+                            {
+                                <a href="@Url.Action("Detalles", "Cuentas", new { id = Model.CuentaId })" class="btn btn-sm btn-outline-primary">
+                                    @Model.CuentaId
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No especificado</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Estado:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="badge bg-@(Model.Estado == "emitido" ? "success" : "danger")">
+                                @Model.Estado
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Emitido por Usuario ID:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            @Model.EmitidoPorUsuarioId
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Fecha de Emisión:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            @Model.EmitidoEn.ToString("dd/MM/yyyy HH:mm")
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.Hash))
+                    {
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong>Hash:</strong>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted">@Model.Hash</small>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Información del Certificado</h6>
+                </div>
+                <div class="card-body">
+                    <h6 class="fw-bold">Tipo de Certificado:</h6>
+                    <p>
+                        @if (Model.Tipo == "saldo")
+                        {
+                            <span class="text-primary"><i class="fas fa-money-bill-wave"></i> Certificado de Saldo</span>
+                        }
+                        else if (Model.Tipo == "solvencia")
+                        {
+                            <span class="text-info"><i class="fas fa-handshake"></i> Certificado de Solvencia</span>
+                        }
+                    </p>
+                    
+                    <h6 class="fw-bold">Estado del Certificado:</h6>
+                    <p>
+                        @if (Model.Estado == "emitido")
+                        {
+                            <span class="text-success"><i class="fas fa-check-circle"></i> Emitido</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger"><i class="fas fa-times-circle"></i> Revocado</span>
+                        }
+                    </p>
+                    
+                    <h6 class="fw-bold">Fecha de Emisión:</h6>
+                    <p>@Model.EmitidoEn.ToString("dd/MM/yyyy")</p>
+                    
+                    <h6 class="fw-bold">Vigencia:</h6>
+                    <p>Este certificado tiene validez desde la fecha de emisión.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle"></i> No se encontró el certificado solicitado.
+    </div>
+}

@@ -1,0 +1,88 @@
+@model BancoCentralWeb.Models.Certificados.CertificadoListResponse
+
+@{
+    ViewData["Title"] = "Certificados";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">
+                <i class="fas fa-certificate"></i> Certificados
+            </h1>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Lista de Certificados</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="certificadosTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Cliente ID</th>
+                        <th>Cuenta ID</th>
+                        <th>Estado</th>
+                        <th>Fecha Emisión</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model?.Certificados != null)
+                    {
+                        @foreach (var certificado in Model.Certificados)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="badge bg-@(certificado.Tipo == "saldo" ? "primary" : "info")">
+                                        @certificado.Tipo
+                                    </span>
+                                </td>
+                                <td>@certificado.ClienteId</td>
+                                <td>@certificado.CuentaId</td>
+                                <td>
+                                    <span class="badge bg-@(certificado.Estado == "emitido" ? "success" : "danger")">
+                                        @certificado.Estado
+                                    </span>
+                                </td>
+                                <td>@certificado.EmitidoEn.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="@Url.Action("Detalles", new { id = certificado.CertificadoId })" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">No hay certificados registrados</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#certificadosTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es.json'
+                },
+                pageLength: 10,
+                ordering: true,
+                searching: true
+            });
+        });
+    </script>
+}

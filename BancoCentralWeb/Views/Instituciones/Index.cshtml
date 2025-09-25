@@ -1,0 +1,84 @@
+@model BancoCentralWeb.Models.Instituciones.InstitucionListResponse
+
+@{
+    ViewData["Title"] = "Instituciones";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">
+                <i class="fas fa-building"></i> Instituciones
+            </h1>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Lista de Instituciones</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="institucionesTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Código SIB</th>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Estado</th>
+                        <th>Fecha Creación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model?.Instituciones != null)
+                    {
+                        @foreach (var institucion in Model.Instituciones)
+                        {
+                            <tr>
+                                <td>@institucion.CodigoSib</td>
+                                <td>@institucion.Nombre</td>
+                                <td>@institucion.Tipo</td>
+                                <td>
+                                    <span class="badge bg-@(institucion.Activo ? "success" : "danger")">
+                                        @(institucion.Activo ? "Activa" : "Inactiva")
+                                    </span>
+                                </td>
+                                <td>@institucion.CreadoEn.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="@Url.Action("Detalles", new { id = institucion.InstitucionId })" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">No hay instituciones registradas</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#institucionesTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es.json'
+                },
+                pageLength: 10,
+                ordering: true,
+                searching: true
+            });
+        });
+    </script>
+}

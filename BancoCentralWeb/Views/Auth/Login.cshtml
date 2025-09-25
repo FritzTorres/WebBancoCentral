@@ -1,0 +1,94 @@
+@model BancoCentralWeb.Models.Auth.LoginRequest
+
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Banco Central Web</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .login-header i {
+            font-size: 3rem;
+            color: #0d6efd;
+            margin-bottom: 1rem;
+        }
+        .form-floating label {
+            color: #6c757d;
+        }
+        .btn-login {
+            background-color: #0d6efd;
+            border: none;
+            padding: 0.75rem;
+            font-weight: 500;
+        }
+        .btn-login:hover {
+            background-color: #0b5ed7;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <i class="fas fa-university"></i>
+            <h2>Banco Central Web</h2>
+            <p class="text-muted">Iniciar Sesión</p>
+        </div>
+        
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                @Html.ValidationSummary()
+            </div>
+        }
+
+        <form asp-action="Login" method="post">
+            <div class="form-floating mb-3">
+                <input asp-for="Usuario" class="form-control" placeholder="Usuario" required>
+                <label asp-for="Usuario">Usuario</label>
+                <span asp-validation-for="Usuario" class="text-danger"></span>
+            </div>
+            
+            <div class="form-floating mb-3">
+                <input asp-for="Contrasena" type="password" class="form-control" placeholder="Contraseña" required>
+                <label asp-for="Contrasena">Contraseña</label>
+                <span asp-validation-for="Contrasena" class="text-danger"></span>
+            </div>
+            
+            <button type="submit" class="w-100 btn btn-lg btn-login">
+                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+            </button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

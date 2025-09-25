@@ -1,0 +1,214 @@
+@model BancoCentralWeb.Models.Transacciones.TransaccionResponse
+
+@{
+    ViewData["Title"] = "Detalles de la Transacción";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">
+                <i class="fas fa-exchange-alt"></i> Detalles de la Transacción
+            </h1>
+            <div>
+                <a href="@Url.Action("Index")" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Información de la Transacción</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>ID de Transacción:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            @Model.TransaccionId
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Referencia Externa:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            @Model.RefExterna
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Tipo:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            @Model.Tipo
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Estado:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="badge bg-@(Model.Estado == "contabilizada" ? "success" : Model.Estado == "validada" ? "info" : Model.Estado == "borrador" ? "warning" : "danger")">
+                                @Model.Estado
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Monto Total:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="text-@(Model.MontoTotal >= 0 ? "success" : "danger")">@Model.MontoTotal.ToString("N2") @Model.Moneda</h4>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Moneda:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            @Model.Moneda
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Fecha de Creación:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            @Model.CreadaEn.ToString("dd/MM/yyyy HH:mm")
+                        </div>
+                    </div>
+                    @if (Model.ValidadaEn.HasValue)
+                    {
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong>Fecha de Validación:</strong>
+                            </div>
+                            <div class="col-md-6">
+                                @Model.ValidadaEn.Value.ToString("dd/MM/yyyy HH:mm")
+                            </div>
+                        </div>
+                    }
+                    @if (Model.ContabilizadaEn.HasValue)
+                    {
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong>Fecha de Contabilización:</strong>
+                            </div>
+                            <div class="col-md-6">
+                                @Model.ContabilizadaEn.Value.ToString("dd/MM/yyyy HH:mm")
+                            </div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Glosa))
+                    {
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong>Glosa:</strong>
+                            </div>
+                            <div class="col-md-6">
+                                @Model.Glosa
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Estados de Transacción</h6>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-badge bg-info">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6>Borrador</h6>
+                                <p class="text-muted">Transacción creada</p>
+                                <small>@Model.CreadaEn.ToString("dd/MM/yyyy HH:mm")</small>
+                            </div>
+                        </div>
+                        
+                        @if (Model.ValidadaEn.HasValue)
+                        {
+                            <div class="timeline-item">
+                                <div class="timeline-badge bg-warning">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6>Validada</h6>
+                                    <p class="text-muted">Transacción validada</p>
+                                    <small>@Model.ValidadaEn.Value.ToString("dd/MM/yyyy HH:mm")</small>
+                                </div>
+                            </div>
+                        }
+                        
+                        @if (Model.ContabilizadaEn.HasValue)
+                        {
+                            <div class="timeline-item">
+                                <div class="timeline-badge bg-success">
+                                    <i class="fas fa-check-double"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6>Contabilizada</h6>
+                                    <p class="text-muted">Transacción contabilizada</p>
+                                    <small>@Model.ContabilizadaEn.Value.ToString("dd/MM/yyyy HH:mm")</small>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle"></i> No se encontró la transacción solicitada.
+    </div>
+}
+
+<style>
+    .timeline {
+        position: relative;
+        padding: 20px 0;
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding-left: 40px;
+        margin-bottom: 20px;
+    }
+    
+    .timeline-badge {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+    
+    .timeline-content {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        border-left: 3px solid #dee2e6;
+    }
+</style>

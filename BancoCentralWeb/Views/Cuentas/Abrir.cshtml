@@ -1,0 +1,111 @@
+@model BancoCentralWeb.Models.Cuentas.CuentaRequest
+
+@{
+    ViewData["Title"] = "Abrir Cuenta";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">
+                <i class="fas fa-plus-circle"></i> Abrir Cuenta
+            </h1>
+            <a href="@Url.Action("Index")" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Información de la Cuenta</h6>
+            </div>
+            <div class="card-body">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger">
+                        @Html.ValidationSummary()
+                    </div>
+                }
+
+                <form asp-action="Abrir" method="post">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="ClienteId" type="hidden" value="@Context.Request.Query["clienteId"]" />
+                                <input asp-for="Producto" class="form-control" placeholder="Producto" required>
+                                <label asp-for="Producto">Producto</label>
+                                <span asp-validation-for="Producto" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <select asp-for="Moneda" class="form-select" required>
+                                    <option value="DOP">DOP - Peso Dominicano</option>
+                                    <option value="USD">USD - Dólar Americano</option>
+                                    <option value="EUR">EUR - Euro</option>
+                                </select>
+                                <label asp-for="Moneda">Moneda</label>
+                                <span asp-validation-for="Moneda" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <input asp-for="ClienteId" type="text" class="form-control" placeholder="ID del Cliente" value="@Context.Request.Query["clienteId"]" readonly>
+                            <label asp-for="ClienteId">ID del Cliente</label>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="@Url.Action("Index")" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Abrir Cuenta
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Información de Ayuda</h6>
+            </div>
+            <div class="card-body">
+                <h6 class="fw-bold">Tipos de Productos:</h6>
+                <ul>
+                    <li><strong>CTA_AHORRO:</strong> Cuenta de Ahorro</li>
+                    <li><strong>CTA_CORRIENTE:</strong> Cuenta Corriente</li>
+                    <li><strong>CTA_PLAZO:</strong> Cuenta a Plazo Fijo</li>
+                    <li><strong>TARJETA_CREDITO:</strong> Tarjeta de Crédito</li>
+                </ul>
+                
+                <h6 class="fw-bold">Monedas Disponibles:</h6>
+                <ul>
+                    <li><strong>DOP:</strong> Peso Dominicano</li>
+                    <li><strong>USD:</strong> Dólar Americano</li>
+                    <li><strong>EUR:</strong> Euro</li>
+                </ul>
+                
+                <h6 class="fw-bold">Notas:</h6>
+                <ul>
+                    <li>El cliente debe estar registrado previamente</li>
+                    <li>La cuenta se creará con estado "activa" por defecto</li>
+                    <li>El saldo inicial será 0.00</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
+}
