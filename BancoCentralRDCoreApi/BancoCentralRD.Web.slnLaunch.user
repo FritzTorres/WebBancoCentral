@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "BancoCentralRD.csproj",
+        "Action": "StartWithoutDebugging"
+      },
+      {
+        "Path": "..\\BancoCentralRD.Desktop\\BancoCentralRD.Desktop.csproj",
+        "Action": "StartWithoutDebugging"
+      }
+    ]
+  }
+]
